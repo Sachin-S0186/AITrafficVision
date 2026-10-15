@@ -1,0 +1,24 @@
+{
+  "dataset_shape": [
+    34272,
+    207
+  ],
+  "sampling_minutes": 5,
+  "lags": 12,
+  "forecast_horizon_minutes": 5,
+  "split": {
+    "train": "first 70%",
+    "validation": "next 15%",
+    "test": "final 15%",
+    "chronological": true
+  },
+  "test_mae": 3.0529081457737415,
+  "test_rmse": 6.387890217352763,
+  "persistence_baseline_mae": 2.8233943375000496,
+  "persistence_baseline_rmse": 6.580277524514762,
+  "improvement_over_persistence_mae_percent": -8.129002924788496,
+  "records_start": "2012-03-01 00:00:00",
+  "records_end": "2012-06-27 23:55:00",
+  "sensor_count": 207,
+  "trained_model_count": 207
+}
