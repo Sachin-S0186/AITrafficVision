@@ -1,6 +1,7 @@
 import os, joblib, numpy as np
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 MODEL_PATH=os.getenv('MODEL_PATH',os.path.join(os.path.dirname(__file__),'..','models','metr_la_ridge.joblib'))
@@ -33,3 +34,10 @@ def forecast(req:ForecastRequest):
  for _ in range(req.steps):
   y=float(model.predict(window.reshape(1,-1))[0]); preds.append(y); window=np.r_[window[1:],y]
  return {'sensor_id':sid,'forecast_horizon_minutes':[5*(i+1) for i in range(req.steps)],'predicted_speeds':preds,'units':'same as METR-LA source values; verify source conventions before operational use','model_type':b['model_type'],'warning':'Research prototype. Forecasts are not a live traffic feed or traffic-control advice.'}
+
+
+# Serve the static frontend from the same container when it is included.
+_frontend_candidates = [os.path.join(os.path.dirname(__file__), 'frontend'), os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))]
+_frontend_dir = next((p for p in _frontend_candidates if os.path.isfile(os.path.join(p, 'index.html'))), None)
+if _frontend_dir:
+    app.mount('/', StaticFiles(directory=_frontend_dir, html=True), name='frontend')
